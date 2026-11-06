@@ -1,0 +1,27 @@
+# Frontend
+node_modules/
+dist/
+dist-ssr/
+*.local
+.vite/
+
+# Backend
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+.venv/
+venv/
+data/
+*.db
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.log
+
+# Env / secrets
+.env
+.env.*

@@ -1,0 +1,38 @@
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: sqlite:////data/app.db
+      REDIS_URL: redis://redis:6379/0
+      DATA_DIR: /data/storage
+    volumes:
+      - convert-data:/data
+    depends_on:
+      - redis
+
+  worker:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.worker
+    environment:
+      DATABASE_URL: sqlite:////data/app.db
+      REDIS_URL: redis://redis:6379/0
+      DATA_DIR: /data/storage
+    volumes:
+      - convert-data:/data
+    depends_on:
+      - redis
+      - api
+    command: celery -A app.workers.celery_app.celery_app worker --loglevel=info
+
+volumes:
+  convert-data:
